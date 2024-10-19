@@ -260,43 +260,39 @@ def main():
     st.write("2. Review our analysis and trading strategy performance.")
     st.write("3. Save as pdf for future reference.")
     
-    # Create a checkbox for each ticker to analyze
-    selected_tickers = st.multiselect("Select Tickers to Analyze", tickers)
-    
-    if selected_tickers:
-        results = []
-        top_stock_images = []  # Store paths for top stock images
-        for ticker in selected_tickers:
-            result = analyze_stock(ticker)
-            results.append(result)
+    # Perform the analysis for all tickers
+results = []
+top_stock_images = []  # Store paths for top stock images
+for ticker in tickers:  # Analyze all tickers from the tickers list
+    result = analyze_stock(ticker)
+    results.append(result)
 
-        # Stock Ranking Section
-        results_df = pd.DataFrame(results)
-        stock_ranking_df = results_df.sort_values(by='Potential Upside (%)', ascending=False).copy()
-        stock_ranking_df['Rank'] = results_df['Potential Upside (%)'].rank(ascending=False) 
-        trade_bot_df = results_df.sort_values(by='Total Return (%)', ascending=False).copy()
-        trade_bot_df['Rank'] = results_df['Total Return (%)'].rank(ascending=False) 
-        
+    # Stock Ranking Section
+    results_df = pd.DataFrame(results)
+    stock_ranking_df = results_df.sort_values(by='Potential Upside (%)', ascending=False).copy()
+    stock_ranking_df['Rank'] = results_df['Potential Upside (%)'].rank(ascending=False)
+    trade_bot_df = results_df.sort_values(by='Total Return (%)', ascending=False).copy()
+    trade_bot_df['Rank'] = results_df['Total Return (%)'].rank(ascending=False)
 
-        st.write("### Stock Ranking:")
-        st.write("*Current Price refers to the last closing price of training dataset.")
-        st.write("*Target Price refers to the mean analyst price target.")
-        st.dataframe(stock_ranking_df[['Rank', 'Ticker', 'Current Price ($)', 'Target Price ($)', 'Potential Upside (%)']])
+    st.write("### Stock Ranking:")
+    st.write("*Current Price refers to the last closing price of training dataset.")
+    st.write("*Target Price refers to the mean analyst price target.")
+    st.dataframe(stock_ranking_df[['Rank', 'Ticker', 'Current Price ($)', 'Target Price ($)', 'Potential Upside (%)']])
 
-        # Trade Bot Performance Section
-        st.write("### Trade Bot Performance:")
-        st.write("*Trading performance based on 1 year of test data.")
-        performance_df = trade_bot_df[['Rank','Ticker', 'Trades Closed', 'Average Return per Trade (%)', 'Total Return (%)', 'In Trade']].copy()
-        performance_df.rename(columns={'In Trade': 'Status'}, inplace=True)
-        performance_df['Status'] = performance_df['Status'].apply(lambda x: "In Trade" if x else "Closed")  # Set Status
-        st.dataframe(performance_df)
+    # Trade Bot Performance Section
+    st.write("### Trade Bot Performance:")
+    st.write("*Trading performance based on 1 year of test data.")
+    performance_df = trade_bot_df[['Rank', 'Ticker', 'Trades Closed', 'Average Return per Trade (%)', 'Total Return (%)', 'In Trade']].copy()
+    performance_df.rename(columns={'In Trade': 'Status'}, inplace=True)
+    performance_df['Status'] = performance_df['Status'].apply(lambda x: "In Trade" if x else "Closed")  # Set Status
+    st.dataframe(performance_df)
 
-        # Graph Section for Top 3 Stocks
-        st.write("### Top 3 stocks:")
-        top_stocks = trade_bot_df.head()
-        for index, row in top_stocks.iterrows():
-            st.write(f"{row['Ticker']} Stock Data")
-            plot_or_save_stock_data(row['Ticker'], row['Test Data'], action='plot')
+    # Graph Section for Top 3 Stocks
+    st.write("### Stocks in ascending order:")
+    top_stocks = trade_bot_df.head()
+    for index, row in top_stocks.iterrows():
+        st.write(f"{row['Ticker']} Stock Data")
+        plot_or_save_stock_data(row['Ticker'], row['Test Data'], action='plot')
 
 # Run the Streamlit app
 if __name__ == "__main__":

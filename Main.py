@@ -7,18 +7,16 @@ import os
 
 # List of stocks to analyze
 tickers = [
-    # Technology
-    'AAPL', 'META', 'AMZN', 'NVDA', 'MSFT', 'TSLA', 'GOOG', 'GOOGL',
-    
-    # FinTech
-    'PYPL', 'AXP', 'MA', 'GPN', 'V',
-    
-    # Finance
-    'GS', 'JPM', 'BLK', 'C', 'BX',
-    
-    # Consumer
-    'KO', 'WMT', 'MCD', 'NKE', 'SBUX'
+    'SAP', 'PNGAY', 'LOGI', 'F', 'PLTR', 'VRTX', 'RTX', 'VZ', 'MCO', 
+    'GM', 'LMT', 'PYPL', 'PFE', 'AMD', 'GOOG', 'GOOGL', 'SNAP', 'V', 
+    'SPOT', 'HD', 'OXY', 'BA', 'KO', 'HLT', 'T', 'DB', 'TSLA', 'IBM', 
+    'MORN', 'KPELY', 'ETSY', 'FVRR', 'KHC', 'BKNG', 'META', 'MSFT', 
+    'SBUX', 'ABNB', 'QCOM', 'SMCI', 'RBLX', 'AMC', 'MARA', 'RIOT', 
+    'NDAQ', 'UPS', 'NOC', 'BCS', 'AMZN', 'UBER', 'AMZN', 'AAPL', 'INTC', 
+    'GOLD', 'MRNA', 'SHOP', 'NET', 'COIN', 'LCID', 'PINS', 'RIVN', 'DIS', 
+    'ILMN', 'TTD', 'U', 'CSUA', 'CVX', 'XOM'
 ]
+
 
 # Function to calculate technical indicators
 def calculate_indicators(data):

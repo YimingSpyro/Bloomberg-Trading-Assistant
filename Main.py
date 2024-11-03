@@ -7,7 +7,6 @@ def get_analyst_ratings(ticker):
     info = yf.Ticker(ticker).info
     return {
         'targetMeanPrice': info.get('targetMeanPrice'),
-        'earningsDate': info.get('earningsDate'),
         'companyName': info.get('longName')  # Get the company name
     }
 
@@ -42,8 +41,7 @@ def analyze_stock(ticker):
             'Company Name': info['companyName'],  # Add company name to return
             'Current Price': current_price,
             'Target Price': info['targetMeanPrice'],
-            'Potential Upside (%)': upside,
-            'Earnings Date': info['earningsDate']
+            'Potential Upside (%)': upside
         }
     except Exception as e:
         return {
@@ -52,7 +50,6 @@ def analyze_stock(ticker):
             'Current Price': None,
             'Target Price': None,
             'Potential Upside (%)': None,
-            'Earnings Date': None,
             'Error': str(e)
         }
 

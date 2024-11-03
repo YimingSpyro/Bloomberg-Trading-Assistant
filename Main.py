@@ -12,8 +12,8 @@ def get_analyst_ratings(ticker):
 
 # Function to calculate potential upside based on analyst target price/current price
 def calculate_upside(current_price, target_price):
-    if target_price <= 0:
-        raise ValueError("Target price must be positive")
+    if current_price is None or target_price is None or target_price <= 0:
+        return None  # Return None if current price is None or target price is invalid
     return ((target_price - current_price) / current_price) * 100
 
 # Function to analyze a stock and return relevant data
@@ -28,17 +28,11 @@ def analyze_stock(ticker):
         else:
             current_price = current_price_data['Close'].iloc[-1]
 
-        if info['targetMeanPrice'] is not None:
-            try:
-                upside = calculate_upside(current_price, info['targetMeanPrice'])
-            except ValueError:
-                upside = None
-        else:
-            upside = None
-
+        upside = calculate_upside(current_price, info['targetMeanPrice'])
+        
         return {
             'Ticker': ticker,
-            'Company Name': info['companyName'],  # Add company name to return
+            'Company Name': info['companyName'],
             'Current Price': current_price,
             'Target Price': info['targetMeanPrice'],
             'Potential Upside (%)': upside
@@ -46,7 +40,7 @@ def analyze_stock(ticker):
     except Exception as e:
         return {
             'Ticker': ticker,
-            'Company Name': None,  # Set company name to None on error
+            'Company Name': None,
             'Current Price': None,
             'Target Price': None,
             'Potential Upside (%)': None,
@@ -121,16 +115,16 @@ tickers = [
     "XOM"      # Exxon Mobil (XOM)
 ]
 
-# Analyze all tickers and store results in a DataFrame
-stock_rankings = []
-for ticker in tickers:
-    result = analyze_stock(ticker)
-    stock_rankings.append(result)
+# Streamlit code to display the rankings
+st.title("Stock Rankings Based on Potential Upside")
+with st.spinner("Fetching stock data..."):  # Loading spinner
+    stock_rankings = []
+    for ticker in tickers:
+        result = analyze_stock(ticker)
+        stock_rankings.append(result)
 
 # Convert to DataFrame and sort by Potential Upside
 rankings_df = pd.DataFrame(stock_rankings)
 rankings_df = rankings_df.sort_values(by='Potential Upside (%)', ascending=False)
 
-# Streamlit code to display the rankings
-st.title("Stock Rankings Based on Potential Upside")
 st.table(rankings_df)

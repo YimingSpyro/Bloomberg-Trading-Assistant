@@ -17,6 +17,7 @@ def calculate_upside(current_price, target_price):
     return ((target_price - current_price) / current_price) * 100
 
 # Function to analyze a stock and return relevant data
+# Function to analyze a stock and return relevant data
 def analyze_stock(ticker):
     try:
         info = get_analyst_ratings(ticker)
@@ -24,6 +25,7 @@ def analyze_stock(ticker):
 
         # Check if the history data is empty
         if current_price_data.empty:
+            st.error(f"No trading data found for {ticker}.")
             current_price = None
         else:
             current_price = current_price_data['Close'].iloc[-1]
@@ -38,6 +40,7 @@ def analyze_stock(ticker):
             'Potential Upside (%)': upside
         }
     except Exception as e:
+        st.error(f"Error analyzing {ticker}: {str(e)}")  # Log the error for each ticker
         return {
             'Ticker': ticker,
             'Company Name': None,

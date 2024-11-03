@@ -16,22 +16,30 @@ def calculate_upside(current_price, target_price):
         return None  # Return None if current price is None or target price is invalid
     return ((target_price - current_price) / current_price) * 100
 
-# Function to analyze a stock and return relevant data
+import datetime
+
 # Function to analyze a stock and return relevant data
 def analyze_stock(ticker):
     try:
         info = get_analyst_ratings(ticker)
-        current_price_data = yf.Ticker(ticker).history(period='1d')
 
+        # Fetch up to the last 5 days of history to ensure we get Friday's close if today is a weekend
+        history_data = yf.Ticker(ticker).history(period='5d')
+        
         # Check if the history data is empty
-        if current_price_data.empty:
+        if history_data.empty:
             st.error(f"No trading data found for {ticker}.")
             current_price = None
         else:
-            current_price = current_price_data['Close'].iloc[-1]
+            # Use the last valid closing price, regardless of the day
+            current_price = history_data['Close'].iloc[-1]
 
-        upside = calculate_upside(current_price, info['targetMeanPrice'])
-        
+        # Calculate potential upside if we have both current and target prices
+        if info['targetMeanPrice'] is not None and current_price is not None:
+            upside = calculate_upside(current_price, info['targetMeanPrice'])
+        else:
+            upside = None
+
         return {
             'Ticker': ticker,
             'Company Name': info['companyName'],
@@ -49,6 +57,10 @@ def analyze_stock(ticker):
             'Potential Upside (%)': None,
             'Error': str(e)
         }
+
+# Sample usage: 
+result = analyze_stock("AAPL")
+print(result)
 
 # Define the tickers for analysis
 tickers = [

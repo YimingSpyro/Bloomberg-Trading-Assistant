@@ -120,7 +120,6 @@ tickers = [
     "ILMN",    # Illumina (ILMN)
     "TTD",     # The Trade Desk (TTD)
     "U",       # Unity Software (U)
-    "CSUA",    # China Shehua Energy (CSUA)
     "CVX",     # Chevron (CVX)
     "XOM"      # Exxon Mobil (XOM)
 ]
